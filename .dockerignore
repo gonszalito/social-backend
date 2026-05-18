@@ -1,0 +1,14 @@
+.git
+.github
+.venv
+.pytest_cache
+tests
+postman
+examples
+var
+*.md
+.env
+.env.*
+Dockerfile*
+docker-compose.yml
+appleTest.jpg

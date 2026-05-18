@@ -1,0 +1,65 @@
+name: Build And Deploy K8s
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: gobig-social-backend
+  K8S_NAMESPACE: gobig
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set image tag
+        run: echo "IMAGE_TAG=${GITHUB_SHA::7}" >> "$GITHUB_ENV"
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+            ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest
+
+      - name: Set kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
+          chmod 600 ~/.kube/config
+
+      - name: Create or update app secret from .env.prod
+        run: |
+          kubectl -n $K8S_NAMESPACE create secret generic gobig-api-secrets \
+            --from-env-file=.env.prod \
+            --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: Create or update IAM public key secret
+        run: |
+          kubectl -n $K8S_NAMESPACE create secret generic gobig-iam-public-key \
+            --from-literal=iam_public_key.pem='${{ secrets.GOBIG_IAM_PUBLIC_KEY_PEM }}' \
+            --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: Deploy manifests
+        run: |
+          kubectl apply -k k8s
+          kubectl -n $K8S_NAMESPACE set image deployment/gobig-api gobig-api=ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          kubectl -n $K8S_NAMESPACE rollout status deployment/gobig-api --timeout=180s

@@ -1,0 +1,14 @@
+version: 1
+uploads:
+  voice_log:
+    alias: "uploads/voice-logs"
+    format: "audio"
+  attempt_photo:
+    alias: "uploads/attempt-photos"
+    format: "image"
+  avatar:
+    alias: "uploads/avatars"
+    format: "image"
+  taste_profile:
+    alias: "uploads/taste-profiles"
+    format: "json"

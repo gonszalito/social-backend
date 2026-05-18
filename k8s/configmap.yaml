@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gobig-api-config
+  namespace: gobig
+data:
+  GOBIG_IAM_PUBLIC_KEY_PATH: /app/keys/iam_public_key.pem
+  GOBIG_POSTGRES_ENABLED: "1"
+  GOBIG_SOCIAL_FEED_MAX_ITEMS: "500"
+  GOBIG_SOCIAL_EVENT_TTL_SECONDS: "604800"
+  GOBIG_UPLOAD_API_PATH: /api/upload
+  GOBIG_NLP_STAGING_DIR: var/nlp-staging

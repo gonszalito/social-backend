@@ -1,0 +1,499 @@
+{
+  "info": {
+    "name": "GoBig Social Backend \u2013 JON-A",
+    "_postman_id": "0101a93a-03e1-40a5-b390-1ea31d2b12c3",
+    "description": "GoBig JON-A (+ M3-01 flags, M2-03 CF KV stub). Set collection variables: base_url, bearer_token, admin_flag_name.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearer_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000"
+    },
+    {
+      "key": "bearer_token",
+      "value": ""
+    },
+    {
+      "key": "ws_room_id",
+      "value": "demo-room"
+    },
+    {
+      "key": "ws_token",
+      "value": ""
+    },
+    {
+      "key": "social_target_user",
+      "value": "u_target"
+    },
+    {
+      "key": "potluck_title",
+      "value": "Team dinner"
+    },
+    {
+      "key": "admin_flag_name",
+      "value": "gobig_nlp_processing"
+    }
+  ],
+  "item": [
+    {
+      "name": "Public",
+      "item": [
+        {
+          "name": "Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "health"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Metrics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/metrics",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "metrics"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Docs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/docs",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "docs"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "OpenAPI",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/openapi.json",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "openapi.json"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "API-M1-02 Storage Presign",
+      "item": [
+        {
+          "name": "Presign avatar",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/storage/presign",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "storage",
+                "presign"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"upload_type\": \"avatar\",\n  \"content_type\": \"image/png\"\n}"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "API-M1-03 NLP Ingest",
+      "item": [
+        {
+          "name": "NLP ingest",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/nlp/ingest",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "nlp",
+                "ingest"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"batch_id\": \"batch-demo-1\",\n  \"recipes\": [\n    {\n      \"recipe_id\": \"r1\",\n      \"text\": \"hello world\",\n      \"confidence\": 0.9\n    }\n  ]\n}"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "API-M1-01 Auth / Admin",
+      "item": [
+        {
+          "name": "List admin flags (Business or Developer)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "GET /api/v1/admin/flags — requires admin_role Business or Developer in JWT.",
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/flags",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "flags"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Revoke current token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/revoke",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "revoke"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"postman demo\"\n}"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "API-M3-01 Feature flags",
+      "item": [
+        {
+          "name": "Update flag (Developer only)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "POST /api/v1/admin/flags/{flag_name} — Developer JWT only. Non-empty reason required. Writes audit file, Redis, then CF KV stub.",
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/flags/{{admin_flag_name}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "flags",
+                "{{admin_flag_name}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"enabled\": true,\n  \"reason\": \"postman demo\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "CF KV sync webhook (Developer only, stub)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "POST /webhooks/cf-kv-sync — Developer JWT. Stub until API-M2-03 (Workers + retry queue).",
+            "url": {
+              "raw": "{{base_url}}/webhooks/cf-kv-sync",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "webhooks",
+                "cf-kv-sync"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "API-M1-04 Social",
+      "item": [
+        {
+          "name": "Follow target",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/social/follow/{{social_target_user}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "social",
+                "follow",
+                "{{social_target_user}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Unfollow target",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/social/unfollow/{{social_target_user}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "social",
+                "unfollow",
+                "{{social_target_user}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Share recipe",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/social/recipe-share",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "social",
+                "recipe-share"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"recipe_id\": \"recipe-123\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Feed",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/social/feed",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "social",
+                "feed"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Profile (target)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/social/profile/{{social_target_user}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "social",
+                "profile",
+                "{{social_target_user}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Potluck create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/social/potluck/create",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "social",
+                "potluck",
+                "create"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"{{potluck_title}}\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Potluck invite",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/social/potluck/invite",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "social",
+                "potluck",
+                "invite"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"potluck_id\": \"PASTE_ID_FROM_CREATE\",\n  \"invitee_user_id\": \"u_friend\"\n}"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "API-M1-05 WebSocket",
+      "item": [
+        {
+          "name": "WS URL (manual)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": {
+              "raw": "ws://127.0.0.1:8000/ws/room/{{ws_room_id}}?token={{ws_token}}"
+            },
+            "description": "Use a WebSocket client. URL format: /ws/room/{room_id}?token=..."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

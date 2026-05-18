@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gobig-api
+  namespace: gobig
+  labels:
+    app: gobig-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: gobig-api
+  template:
+    metadata:
+      labels:
+        app: gobig-api
+    spec:
+      containers:
+        - name: gobig-api
+          image: ghcr.io/your-org/gobig-social-backend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+              name: http
+          envFrom:
+            - configMapRef:
+                name: gobig-api-config
+            - secretRef:
+                name: gobig-api-secrets
+          volumeMounts:
+            - name: iam-public-key
+              mountPath: /app/keys/iam_public_key.pem
+              subPath: iam_public_key.pem
+              readOnly: true
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 20
+            timeoutSeconds: 2
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+      volumes:
+        - name: iam-public-key
+          secret:
+            secretName: gobig-iam-public-key

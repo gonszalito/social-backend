@@ -1,0 +1,4 @@
+# Allow all env files
+!.env
+!.env.*
+!*.env

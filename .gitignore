@@ -1,0 +1,35 @@
+.venv/
+venv/
+.env
+!.env.example
+
+__pycache__/
+*.py[cod]
+*.pyd
+.pytest_cache/
+.coverage
+coverage.xml
+.mypy_cache/
+.ruff_cache/
+.pytype/
+
+.DS_Store
+Thumbs.db
+
+.idea/
+.vscode/
+
+*.log
+*.sqlite3
+
+dist/
+build/
+*.egg-info/
+
+# Local runtime artifacts
+var/
+
+# Local keys (never commit private keys)
+keys/iam_private.pem
+
+# .cursor/
